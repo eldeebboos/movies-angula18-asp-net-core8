@@ -1,7 +1,11 @@
 <h2>Edit Movie</h2>
 
-<app-movies-form 
-[selectedActors]="selectedActors"
-[nonSelectedGenres]="nonSelectedGenres" [selectedGenres]="selectedGenres"
-[nonSelectedTheaters]="nonSelectedTheaters" [selectedTheaters]="selectedTheaters"
-[model]="model" (postForm)="saveChanges($event)"></app-movies-form>
+@if (model){
+    <app-movies-form 
+    [selectedActors]="selectedActors"
+    [nonSelectedGenres]="nonSelectedGenres" [selectedGenres]="selectedGenres"
+    [nonSelectedTheaters]="nonSelectedTheaters" [selectedTheaters]="selectedTheaters"
+    [model]="model" (postForm)="saveChanges($event)"></app-movies-form>
+} @else {
+    <app-loading></app-loading>
+}

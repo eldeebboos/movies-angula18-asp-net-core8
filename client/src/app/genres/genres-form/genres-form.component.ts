@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstLetterShouldBeUppercase } from '../../shared/functions/validations';
@@ -17,54 +10,55 @@ import { GenreCreationDTO, GenreDTO } from '../genres.models';
 @Component({
   selector: 'app-genres-form',
   standalone: true,
-  imports: [
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    RouterLink,
-  ],
+  imports: [MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, RouterLink],
   templateUrl: './genres-form.component.html',
-  styleUrl: './genres-form.component.css',
+  styleUrl: './genres-form.component.css'
 })
 export class GenresFormComponent implements OnInit {
+  
+
   private formBuilder = inject(FormBuilder);
 
   form = this.formBuilder.group({
-    name: [
-      '',
-      { validators: [Validators.required, firstLetterShouldBeUppercase()] },
-    ],
+    name: ['', {validators: [Validators.required, firstLetterShouldBeUppercase(), Validators.maxLength(50)]}]
   });
 
-  @Input() model?: GenreDTO;
+  @Input()
+  model?: GenreDTO;
 
-  @Output() postForm = new EventEmitter<GenreCreationDTO>();
+  @Output()
+  postForm = new EventEmitter<GenreCreationDTO>();
 
   ngOnInit(): void {
-    if (this.model !== undefined) {
+    if (this.model !== undefined){
       this.form.patchValue(this.model);
     }
   }
 
   getErrorMessagesForName(): string {
+
     let field = this.form.controls.name;
 
-    if (field.hasError('required')) {
-      return 'The name field is required';
+    if (field.hasError('required')){
+      return "The name field is required";
     }
 
-    if (field.hasError('firstLetterShouldBeUppercase')) {
+    if (field.hasError('firstLetterShouldBeUppercase')){
       return field.getError('firstLetterShouldBeUppercase').message;
     }
 
-    return '';
+    if (field.hasError('maxlength')){
+      return `The field Name must not have more than ${field.getError('maxlength').requiredLength} characters`;
+    }
+
+    return "";
   }
 
-  saveChanges() {
+  saveChanges(){
     // .. save changes
 
     const genre = this.form.value as GenreCreationDTO;
     this.postForm.emit(genre);
   }
+
 }

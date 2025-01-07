@@ -7,22 +7,24 @@ import { Router, RouterLink } from '@angular/router';
 import { firstLetterShouldBeUppercase } from '../../shared/functions/validations';
 import { GenreCreationDTO } from '../genres.models';
 import { GenresFormComponent } from "../genres-form/genres-form.component";
+import { GenresService } from '../genres.service';
+import { extractErrors } from '../../shared/functions/extractErrors';
+import { DisplayErrorsComponent } from "../../shared/components/display-errors/display-errors.component";
+import { CRUD_SERVICE_TOKEN } from '../../shared/providers/providers';
+import { CreateEntityComponent } from "../../shared/components/create-entity/create-entity.component";
 
 @Component({
   selector: 'app-create-genre',
   standalone: true,
-  imports: [GenresFormComponent],
+  imports: [GenresFormComponent, DisplayErrorsComponent, CreateEntityComponent],
   templateUrl: './create-genre.component.html',
-  styleUrl: './create-genre.component.css'
+  styleUrl: './create-genre.component.css',
+  providers: [
+    {provide: CRUD_SERVICE_TOKEN, useClass: GenresService}
+  ]
 })
 export class CreateGenreComponent {
 
-  router = inject(Router);
-
-  saveChanges(genre: GenreCreationDTO){
-    // .. save changes
-    console.log(genre);
-    this.router.navigate(['/genres']);
-  }
+  genresForm = GenresFormComponent;
 
 }

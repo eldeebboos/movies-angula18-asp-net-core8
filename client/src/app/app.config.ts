@@ -1,10 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { tokenInterceptorHTTP } from './security/token-interceptor-http';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -20,7 +23,9 @@ export const appConfig: ApplicationConfig = {
       dateA11yLabel: 'LL',
       monthYearA11yLabel: 'MMMM YYYY',
     },
-  })
+  }),
+  provideHttpClient(withFetch(), withInterceptors([tokenInterceptorHTTP])),
+  importProvidersFrom([SweetAlert2Module.forRoot()])
 
   ]
 };
